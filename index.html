@@ -6,6 +6,7 @@
     --ink:#182220; --ink-soft:#4B5A56; --ink-faint:#7C8A86;
     --line:#C7D0CB; --line-strong:#9FACA6;
     --accent:#155E82; --accent-strong:#0F4A66; --accent-soft:#DCEAF1; --accent-ink:#0B3A50;
+    --fill:#14587C; --fill-ink:#F3F7F5;
     --fact-bg:#E4EAEC; --fact-fg:#33474F;
     --assum-bg:#F6E9CC; --assum-fg:#7A5414;
     --est-bg:#ECE3F3; --est-fg:#5B3E82;
@@ -72,8 +73,8 @@
 
   /* ---------- shell / layout ---------- */
   .masthead{
-    background:var(--accent-ink,var(--accent-strong)); background:var(--accent-strong);
-    color:#F3F7F5; padding:3.2rem 1.5rem 2.6rem;
+    background:var(--fill);
+    color:var(--fill-ink); padding:3.2rem 1.5rem 2.6rem;
     border-bottom:6px solid var(--ink);
   }
   :root[data-theme="dark"] .masthead, @media (prefers-color-scheme:dark){.masthead{border-bottom-color:#000;}}
@@ -154,7 +155,7 @@
   .table-wrap{overflow-x:auto; margin:1.4rem 0; border:1px solid var(--line); border-radius:var(--radius);}
   table{border-collapse:collapse; width:100%; font-size:.86rem; min-width:640px;}
   th,td{padding:.65rem .8rem; text-align:left; border-bottom:1px solid var(--line); vertical-align:top;}
-  thead th{background:var(--accent-strong); color:#fff; font-family:var(--font-display); font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;}
+  thead th{background:var(--fill); color:var(--fill-ink); font-family:var(--font-display); font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;}
   tbody tr:nth-child(even){background:var(--paper-raised);}
   tbody tr:last-child td{border-bottom:none;}
   td.num, th.num{font-variant-numeric:tabular-nums; font-family:var(--font-mono); white-space:nowrap;}
@@ -184,6 +185,19 @@
   .spectrum-bar > span{display:block; height:100%; background:var(--accent);}
   .spectrum-meta{font-size:.78rem; color:var(--ink-soft); line-height:1.5;}
   .spectrum-badge{position:absolute; top:-11px; left:1.1rem; background:var(--accent); color:#fff; font-family:var(--font-mono); font-size:.62rem; text-transform:uppercase; letter-spacing:.08em; padding:.2rem .5rem; border-radius:2px;}
+
+  /* concept comparison cards */
+  .compare-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin:1.4rem 0;}
+  @media (max-width:700px){ .compare-grid{grid-template-columns:1fr;} }
+  .compare-card{border:1px solid var(--line-strong); border-radius:5px; background:var(--paper-raised); padding:1.1rem 1.2rem; display:flex; flex-direction:column; box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .compare-card.chosen{border-color:var(--accent); box-shadow:0 2px 10px rgba(21,94,130,.12);}
+  .compare-tier{font-family:var(--font-mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint);}
+  .compare-title{font-family:var(--font-display); font-weight:700; font-size:1.05rem; margin:.25rem 0 .9rem; padding-bottom:.9rem; border-bottom:1px solid var(--line);}
+  .compare-row{padding:.7rem 0; border-top:1px solid var(--line);}
+  .compare-row:first-of-type{border-top:none; padding-top:0;}
+  .compare-label{font-family:var(--font-mono); font-size:.64rem; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin-bottom:.35rem;}
+  .compare-val{font-size:.85rem; line-height:1.55;}
+  .compare-val.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
 
   /* generic flow diagram */
   .flow{display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; min-width:680px;}
@@ -625,10 +639,10 @@
             <span class="heat-chip heat-no">GPS-based indoor positioning</span>
           </div>
           <div class="heat-legend">
-            <span><span class="sw" style="background:var(--rec-bg); border:1px solid var(--rec-fg);"></span>Feasible today</span>
-            <span><span class="sw" style="background:var(--accent-soft); border:1px solid var(--accent);"></span>Feasible with added hardware/procedure</span>
-            <span><span class="sw" style="background:var(--assum-bg); border:1px solid var(--assum-fg);"></span>Requires further R&amp;D</span>
-            <span><span class="sw" style="background:var(--open-bg); border:1px solid var(--open-fg);"></span>Not currently feasible</span>
+            <span><span class="sw" style="background:var(--rec-fg);"></span>Feasible today</span>
+            <span><span class="sw" style="background:var(--accent);"></span>Feasible with added hardware/procedure</span>
+            <span><span class="sw" style="background:var(--assum-fg);"></span>Requires further R&amp;D</span>
+            <span><span class="sw" style="background:var(--open-fg);"></span>Not currently feasible</span>
           </div>
         </div>
         <figcaption>Rows marked "requires further R&amp;D" or with no published domain benchmark are exactly what the pilot in Section 15 is designed to measure directly, not assume.</figcaption>
@@ -667,17 +681,34 @@
     <section id="s6">
       <div class="kicker">06 · Weighing the options</div>
       <h2>Comparison of the three solution concepts</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Dimension</th><th>A — Low-Risk Assisted Audit</th><th>B — AI-Assisted Platform</th><th>C — Spatial Digital Twin</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Automation level</strong></td><td>Low — human-tagged location, human-identified signs. Assistive flags only (blur/glare, OCR-as-hint, dup-candidate), all human-confirmed.</td><td>Medium-high — detection, dedup, OCR/VLM, location assignment, rule-matching run to a <em>draft</em> stage; mandatory sign-off before authoritative. QC is fully automated.</td><td>Same draft layer as B, <strong>plus</strong> genuine automation of metric measurement from point-cloud/LiDAR geometry. Tactile depth, Braille, LRV remain unautomatable in all three. <span class="tag fact">Fact</span></td></tr>
-            <tr><td><strong>Feasibility (today)</strong></td><td>High — every component is commercially mature and deployed elsewhere. <span class="tag fact">Fact</span></td><td>Moderate — detection/OCR/VIO are mature individually, but sign-specific dedup, indoor change detection, and hospital-lighting accuracy are unvalidated R&amp;D. <span class="tag assumption">Assumption</span></td><td>Lowest — everything in B's profile, plus the unproven step of registering a point cloud to (often absent/stale) BIM. No vendor does end-to-end capture-to-twin-to-compliance for hospitals. <span class="tag fact">Fact</span></td></tr>
-            <tr><td><strong>Cost / time to v1</strong></td><td class="num">$200k–$400k · 4–6 mo <span class="tag estimate">Estimate</span></td><td class="num">$1.2M–$3M · 12–24 mo <span class="tag estimate">Estimate</span></td><td class="num">$100k–$1M+ capture alone · 18–30+ mo <span class="tag estimate">Estimate</span></td></tr>
-            <tr><td><strong>Regulatory/privacy risk</strong></td><td>Lowest — stop-and-shoot, zero automated verdicts, nil AI-misjudgment exposure.</td><td>Moderate-high — continuous video/LiDAR widens incidental-PHI surface; draft findings a reviewer might rubber-stamp add a new liability vector.</td><td>Highest — a persistent, high-fidelity point cloud of hospital interiors is itself a durable sensitive record.</td></tr>
-            <tr><td><strong>Defensibility / moat</strong></td><td>Weakest — organization/tap-to-tag/OCR search is replicable by a competent SaaS team in months.</td><td>Strong &amp; durable — a proprietary, versioned, jurisdiction-resolved rule library plus an accumulating longitudinal dataset.</td><td>Strongest in theory, weakest to prove — genuine switching-cost moat, but only after an expensive, unverified baseline investment.</td></tr>
-          </tbody>
-        </table>
+      <div class="compare-grid">
+        <div class="compare-card chosen">
+          <div class="compare-tier">Concept A</div>
+          <div class="compare-title">Low-Risk Assisted Audit</div>
+          <div class="compare-row"><div class="compare-label">Automation level</div><div class="compare-val">Low — human-tagged location, human-identified signs. Assistive flags only (blur/glare, OCR-as-hint, dup-candidate), all human-confirmed.</div></div>
+          <div class="compare-row"><div class="compare-label">Feasibility (today)</div><div class="compare-val">High — every component is commercially mature and deployed elsewhere. <span class="tag fact">Fact</span></div></div>
+          <div class="compare-row"><div class="compare-label">Cost / time to v1</div><div class="compare-val num">$200k–$400k · 4–6 mo</div><div class="compare-val"><span class="tag estimate">Estimate</span></div></div>
+          <div class="compare-row"><div class="compare-label">Regulatory/privacy risk</div><div class="compare-val">Lowest — stop-and-shoot, zero automated verdicts, nil AI-misjudgment exposure.</div></div>
+          <div class="compare-row"><div class="compare-label">Defensibility / moat</div><div class="compare-val">Weakest — organization/tap-to-tag/OCR search is replicable by a competent SaaS team in months.</div></div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-tier">Concept B</div>
+          <div class="compare-title">AI-Assisted Platform</div>
+          <div class="compare-row"><div class="compare-label">Automation level</div><div class="compare-val">Medium-high — detection, dedup, OCR/VLM, location assignment, rule-matching run to a <em>draft</em> stage; mandatory sign-off before authoritative. QC is fully automated.</div></div>
+          <div class="compare-row"><div class="compare-label">Feasibility (today)</div><div class="compare-val">Moderate — detection/OCR/VIO are mature individually, but sign-specific dedup, indoor change detection, and hospital-lighting accuracy are unvalidated R&amp;D. <span class="tag assumption">Assumption</span></div></div>
+          <div class="compare-row"><div class="compare-label">Cost / time to v1</div><div class="compare-val num">$1.2M–$3M · 12–24 mo</div><div class="compare-val"><span class="tag estimate">Estimate</span></div></div>
+          <div class="compare-row"><div class="compare-label">Regulatory/privacy risk</div><div class="compare-val">Moderate-high — continuous video/LiDAR widens incidental-PHI surface; draft findings a reviewer might rubber-stamp add a new liability vector.</div></div>
+          <div class="compare-row"><div class="compare-label">Defensibility / moat</div><div class="compare-val">Strong &amp; durable — a proprietary, versioned, jurisdiction-resolved rule library plus an accumulating longitudinal dataset.</div></div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-tier">Concept C</div>
+          <div class="compare-title">Spatial Digital Twin</div>
+          <div class="compare-row"><div class="compare-label">Automation level</div><div class="compare-val">Same draft layer as B, <strong>plus</strong> genuine automation of metric measurement from point-cloud/LiDAR geometry. Tactile depth, Braille, LRV remain unautomatable in all three. <span class="tag fact">Fact</span></div></div>
+          <div class="compare-row"><div class="compare-label">Feasibility (today)</div><div class="compare-val">Lowest — everything in B's profile, plus the unproven step of registering a point cloud to (often absent/stale) BIM. No vendor does end-to-end capture-to-twin-to-compliance for hospitals. <span class="tag fact">Fact</span></div></div>
+          <div class="compare-row"><div class="compare-label">Cost / time to v1</div><div class="compare-val num">$100k–$1M+ capture alone · 18–30+ mo</div><div class="compare-val"><span class="tag estimate">Estimate</span></div></div>
+          <div class="compare-row"><div class="compare-label">Regulatory/privacy risk</div><div class="compare-val">Highest — a persistent, high-fidelity point cloud of hospital interiors is itself a durable sensitive record.</div></div>
+          <div class="compare-row"><div class="compare-label">Defensibility / moat</div><div class="compare-val">Strongest in theory, weakest to prove — genuine switching-cost moat, but only after an expensive, unverified baseline investment.</div></div>
+        </div>
       </div>
       <div class="prose">
         <p><strong>Direct comparison.</strong> A and B sit at opposite ends of one automation continuum on the <em>same</em> customer segment and workflow — B is A plus a detection/dedup/OCR/rules-engine layer inserted between capture and review; nothing about A's UI needs to be thrown away to build B. C is a different bet entirely: a different buyer (Facilities/Real Estate valuing the spatial asset, not the ADA workflow), specialist hardware, and a narrow unique benefit (metric measurement) that does nothing for the harder unsolved problems (tactile depth, Braille, LRV). <span class="tag recommendation">Recommendation</span> C is best understood as a premium capture-hardware upgrade layered onto B, not a standalone alternative to A/B.</p>
